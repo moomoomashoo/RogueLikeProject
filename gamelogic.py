@@ -72,102 +72,160 @@ class Game(object):
     def process_events(self):
         """ Process all of the events. Return a "True" if we need
             to close the window. """
-        if self.paused:
-            for event in pygame.event.get(): # User did something
-                if event.type == pygame.QUIT: # If user clicked close
-                    return True
-                    
-                if event.type == pygame.JOYBUTTONDOWN:
-                    if self.my_joystick.get_button(7): # Start
-                        self.paused = False
-                        self.minimap_on = False
-            
-        else:
-            for event in pygame.event.get(): # User did something
-                if event.type == pygame.QUIT: # If user clicked close
-                    return True
-    
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.player.go_left()
-                    if event.key == pygame.K_RIGHT:
-                        self.player.go_right()
-                    if event.key == pygame.K_UP:
-                        self.player.jump()
-                    if event.key == pygame.K_ESCAPE:
+        if self.controller:
+            if self.paused:
+                for event in pygame.event.get(): # User did something
+                    if event.type == pygame.QUIT: # If user clicked close
                         return True
-    
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT and self.player.change_x < 0:
-                        self.player.stop()
-                    if event.key == pygame.K_RIGHT and self.player.change_x > 0:
-                        self.player.stop()
-    
-                if event.type == pygame.JOYBUTTONDOWN:
-                    if self.my_joystick.get_button(0): # A
-                        self.player.jump()
-                    if self.my_joystick.get_button(1): # B
-                        ()#self.next_level()
-                    if self.my_joystick.get_button(2): # X
-                        if self.player.point_down:
-                            self.player.hit_down = True
-                            self.player.hit_up = False
-                            self.player.max_fall_speed = 30
-                            self.player.change_y = 20
-                        elif self.player.point_up:
-                            self.player.hit_up = True
-                            self.player.hit_down = False
-                        elif self.player.facing_right:
-                            self.player.face = True
-                            self.player.hit_up = False
-                            self.player.hit_down = False
-                        else:
-                            self.player.face = False
-                            self.player.hit_up = False
-                            self.player.hit_down = False
-                        self.player.melee_attack()
-                    if self.my_joystick.get_button(3): # Y
-                        () #self.minimap_on = not self.minimap_on
-                    if self.my_joystick.get_button(5): # RB
-                        self.player.jetpack()
-                    if self.my_joystick.get_button(6): # Back
-                        self.__init__()
-                    if self.my_joystick.get_button(7): # Start
-                        self.paused = True
-                        self.minimap_on = True
                         
-                if self.my_joystick.get_button(4): # LB
                     if event.type == pygame.JOYBUTTONDOWN:
-                        self.LB = True
-                        self.player.hover()
-                        self.player.hit_down = False
-                if self.LB and event.type == pygame.JOYBUTTONUP:
-                        self.LB = False
-                        self.player.stop_hover()
-    
-            if self.joystick_count != 0:
-                horiz_axis_pos = self.my_joystick.get_axis(0)
-                if horiz_axis_pos > 0.2 or horiz_axis_pos < -0.2:
-                    self.player.rect.x += horiz_axis_pos * self.player.speed
-                if horiz_axis_pos > 0.2:
-                    self.player.facing_right = True
-                elif horiz_axis_pos < -0.2:
-                    self.player.facing_right = False
-                vert_axis_pos = self.my_joystick.get_axis(1)
-                if vert_axis_pos > 0.4:
-                    self.player.point_down = True
-                    self.player.point_up = False
-                elif vert_axis_pos < -0.4:
-                    self.player.point_up = True
-                    self.player.point_down = False
-                else:
-                    self.player.point_up = False
-                    self.player.point_down = False
-                triggers = self.my_joystick.get_axis(2)
-                if triggers < -0.5:
-                    self.player.dodge_right()
-                elif triggers > 0.5:
-                    self.player.dodge_left()
+                        if self.my_joystick.get_button(7): # Start
+                            self.paused = False
+                            self.minimap_on = False
+                
+            else:
+                for event in pygame.event.get(): # User did something
+                    if event.type == pygame.QUIT: # If user clicked close
+                        return True
+        
+                    if event.type == pygame.JOYBUTTONDOWN:
+                        if self.my_joystick.get_button(0): # A
+                            self.player.jump()
+                        if self.my_joystick.get_button(1): # B
+                            ()
+                            #self.next_level()
+                        if self.my_joystick.get_button(2): # X
+                            if self.player.point_down:
+                                self.player.hit_down = True
+                                self.player.hit_up = False
+                                self.player.max_fall_speed = 30
+                                self.player.change_y = 20
+                            elif self.player.point_up:
+                                self.player.hit_up = True
+                                self.player.hit_down = False
+                            elif self.player.facing_right:
+                                self.player.face = True
+                                self.player.hit_up = False
+                                self.player.hit_down = False
+                            else:
+                                self.player.face = False
+                                self.player.hit_up = False
+                                self.player.hit_down = False
+                            self.player.melee_attack()
+                        if self.my_joystick.get_button(3): # Y
+                            () #self.minimap_on = not self.minimap_on
+                        if self.my_joystick.get_button(5): # RB
+                            self.player.jetpack()
+                        if self.my_joystick.get_button(6): # Back
+                            self.__init__()
+                        if self.my_joystick.get_button(7): # Start
+                            self.paused = True
+                            self.minimap_on = True
+                            
+                    if self.my_joystick.get_button(4): # LB
+                        if event.type == pygame.JOYBUTTONDOWN:
+                            self.LB = True
+                            self.player.hover()
+                            self.player.hit_down = False
+                    if self.LB and event.type == pygame.JOYBUTTONUP:
+                            self.LB = False
+                            self.player.stop_hover()
+        
+                if self.joystick_count != 0:
+                    horiz_axis_pos = self.my_joystick.get_axis(0)
+                    if horiz_axis_pos > 0.2 or horiz_axis_pos < -0.2:
+                        self.player.rect.x += horiz_axis_pos * self.player.speed
+                    if horiz_axis_pos > 0.2:
+                        self.player.facing_right = True
+                    elif horiz_axis_pos < -0.2:
+                        self.player.facing_right = False
+                    vert_axis_pos = self.my_joystick.get_axis(1)
+                    if vert_axis_pos > 0.4:
+                        self.player.point_down = True
+                        self.player.point_up = False
+                    elif vert_axis_pos < -0.4:
+                        self.player.point_up = True
+                        self.player.point_down = False
+                    else:
+                        self.player.point_up = False
+                        self.player.point_down = False
+                    triggers = self.my_joystick.get_axis(2)
+                    if triggers < -0.5:
+                        self.player.dodge_right()
+                    elif triggers > 0.5:
+                        self.player.dodge_left()
+                return False
+        else:
+            if self.paused:
+                for event in pygame.event.get(): # User did something
+                    if event.type == pygame.QUIT: # If user clicked close
+                        return True
+                        
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_p:
+                            self.paused = False
+                
+            else:
+                for event in pygame.event.get(): # User did something
+                    if event.type == pygame.QUIT: # If user clicked close
+                        return True
+                        
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_LEFT:
+                            self.player.go_left()
+                            self.player.facing_right = False
+                        if event.key == pygame.K_RIGHT:
+                            self.player.go_right()
+                            self.player.facing_right = True
+                        if event.key == pygame.K_UP:
+                            self.player.point_up = True
+                            self.player.point_down = False
+                        if event.key == pygame.K_DOWN:
+                            self.player.point_up = False
+                            self.player.point_down = True
+                        if event.key == pygame.K_z:
+                            self.player.jump()
+                        if event.key == pygame.K_x:
+                            if self.player.point_down:
+                                self.player.hit_down = True
+                                self.player.hit_up = False
+                                self.player.max_fall_speed = 30
+                                self.player.change_y = 20
+                            elif self.player.point_up:
+                                self.player.hit_up = True
+                                self.player.hit_down = False
+                            elif self.player.facing_right:
+                                self.player.face = True
+                                self.player.hit_up = False
+                                self.player.hit_down = False
+                            else:
+                                self.player.face = False
+                                self.player.hit_up = False
+                                self.player.hit_down = False
+                            self.player.melee_attack()
+                        if event.key == pygame.K_a:
+                            self.player.jetpack()
+                        if event.key == pygame.K_s:
+                            self.player.hover()
+                        if event.key == pygame.K_p:
+                            self.paused = True
+                        if event.key == pygame.K_ESCAPE:
+                            return True
+                
+                    if event.type == pygame.KEYUP:
+                        if event.key == pygame.K_LEFT and self.player.change_x < 0:
+                            self.player.stop()
+                        if event.key == pygame.K_RIGHT and self.player.change_x > 0:
+                            self.player.stop()
+                        if event.key == pygame.K_UP:
+                            self.player.point_up = False
+                            self.player.point_down = False
+                        if event.key == pygame.K_DOWN:
+                            self.player.point_up = False
+                            self.player.point_down = False
+                        if event.key == pygame.K_s:
+                            self.player.stop_hover()
+                        
             return False
 
     def run_logic(self):

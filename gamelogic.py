@@ -32,6 +32,8 @@ class Game(object):
 
         self.game_over = False
         self.paused = False
+        
+        self.controller = False
 
         self.joystick_count = pygame.joystick.get_count()
         if self.joystick_count == 0:
@@ -41,6 +43,7 @@ class Game(object):
             # Use joystick #0 and initialize it
             self.my_joystick = pygame.joystick.Joystick(0)
             self.my_joystick.init()
+            self.controller = True
 
         self.active_sprite_list = pygame.sprite.Group()
         
@@ -164,6 +167,7 @@ class Game(object):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
                             self.paused = False
+                            self.minimap_on = False
                 
             else:
                 for event in pygame.event.get(): # User did something
@@ -209,6 +213,7 @@ class Game(object):
                             self.player.hover()
                         if event.key == pygame.K_p:
                             self.paused = True
+                            self.minimap_on = True
                         if event.key == pygame.K_ESCAPE:
                             return True
                 

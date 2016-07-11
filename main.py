@@ -14,7 +14,7 @@ def main():
     screen = pygame.display.set_mode(size)
     #screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
-    pygame.display.set_caption("Something about Chainsaws")
+    pygame.display.set_caption("RogueLike v0.5")
     pygame.mouse.set_visible(False)
 
     # Create our objects and set the data
